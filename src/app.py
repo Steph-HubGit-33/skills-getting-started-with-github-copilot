@@ -1,8 +1,8 @@
 """
-High School Management System API
+Système de gestion du lycée
 
-A super simple FastAPI application that allows students to view and sign up
-for extracurricular activities at Mergington High School.
+Une application FastAPI très simple qui permet aux étudiants de consulter et de s'inscrire
+à des activités extrascolaires au lycée de Mergington.
 """
 
 from fastapi import FastAPI, HTTPException
@@ -21,59 +21,59 @@ app.mount("/static", StaticFiles(directory=os.path.join(Path(__file__).parent,
 
 # In-memory activity database
 activities = {
-    "Chess Club": {
-        "description": "Learn strategies and compete in chess tournaments",
-        "schedule": "Fridays, 3:30 PM - 5:00 PM",
+    "Club d'échecs": {
+        "description": "Apprenez des stratégies et participez à des tournois d'échecs",
+        "horaire": "Vendredis, 15h30 - 17h00",
         "max_participants": 12,
-        "participants": ["michael@mergington.edu", "daniel@mergington.edu"]
+        "participants": ["michael@lesiris.edu", "daniel@lesiris.edu"]
     },
-    "Programming Class": {
-        "description": "Learn programming fundamentals and build software projects",
-        "schedule": "Tuesdays and Thursdays, 3:30 PM - 4:30 PM",
+    "Cours de programmation": {
+        "description": "Apprenez les bases de la programmation et créez des projets logiciels",
+        "horaire": "Mardis et jeudis, 15h30 - 16h30",
         "max_participants": 20,
-        "participants": ["emma@mergington.edu", "sophia@mergington.edu"]
+        "participants": ["emma@lesiris.edu", "sophia@lesiris.edu"]
     },
-    "Gym Class": {
-        "description": "Physical education and sports activities",
-        "schedule": "Mondays, Wednesdays, Fridays, 2:00 PM - 3:00 PM",
+    "Cours de gym": {
+        "description": "Éducation physique et activités sportives",
+        "horaire": "Lundis, mercredis, vendredis, 14h00 - 15h00",
         "max_participants": 30,
-        "participants": ["john@mergington.edu", "olivia@mergington.edu"]
+        "participants": ["john@lesiris.edu", "olivia@lesiris.edu"]
     },
-    "Soccer Team": {
-        "description": "Join the school soccer team and compete in matches",
-        "schedule": "Tuesdays and Thursdays, 4:00 PM - 5:30 PM",
+    "Équipe de football": {
+        "description": "Rejoignez l'équipe de football de l'école et participez à des matchs",
+        "horaire": "Mardis et jeudis, 16h00 - 17h30",
         "max_participants": 22,
-        "participants": ["liam@mergington.edu", "noah@mergington.edu"]
+        "participants": ["liam@lesiris.edu", "noah@lesiris.edu"]
     },
-    "Basketball Team": {
-        "description": "Practice and compete in basketball tournaments",
-        "schedule": "Wednesdays and Fridays, 3:30 PM - 5:00 PM",
+    "Équipe de basketball": {
+        "description": "Entraînez-vous et participez à des tournois de basketball",
+        "horaire": "Mercredis et vendredis, 15h30 - 17h00",
         "max_participants": 15,
-        "participants": ["ava@mergington.edu", "mia@mergington.edu"]
+        "participants": ["ava@lesiris.edu", "mia@lesiris.edu"]
     },
-    "Art Club": {
-        "description": "Explore various art techniques and create masterpieces",
-        "schedule": "Thursdays, 3:30 PM - 5:00 PM",
+    "Club d'art": {
+        "description": "Explorez diverses techniques artistiques et créez des chefs-d'œuvre",
+        "horaire": "Jeudis, 15h30 - 17h00",
         "max_participants": 15,
-        "participants": ["amelia@mergington.edu", "harper@mergington.edu"]
+        "participants": ["amelia@lesiris.edu", "harper@lesiris.edu"]
     },
-    "Drama Club": {
-        "description": "Act, direct, and produce plays and performances",
-        "schedule": "Mondays and Wednesdays, 4:00 PM - 5:30 PM",
+    "Club de théâtre": {
+        "description": "Jouez, mettez en scène et produisez des pièces et des spectacles",
+        "horaire": "Lundis et mercredis, 16h00 - 17h30",
         "max_participants": 20,
-        "participants": ["elijah@mergington.edu", "isabella@mergington.edu"]
+        "participants": ["elijah@lesiris.edu", "isabella@lesiris.edu"]
     },
-    "Math Club": {
-        "description": "Solve challenging problems and participate in math competitions",
-        "schedule": "Tuesdays, 3:30 PM - 4:30 PM",
+    "Club de mathématiques": {
+        "description": "Résolvez des problèmes complexes et participez à des compétitions de mathématiques",
+        "horaire": "Mardis, 15h30 - 16h30",
         "max_participants": 10,
-        "participants": ["lucas@mergington.edu", "charlotte@mergington.edu"]
+        "participants": ["lucas@lesiris.edu", "charlotte@lesiris.edu"]
     },
-    "Science Club": {
-        "description": "Conduct experiments and explore scientific concepts",
-        "schedule": "Fridays, 3:30 PM - 5:00 PM",
+    "Club de sciences": {
+        "description": "Réalisez des expériences et explorez des concepts scientifiques",
+        "horaire": "Vendredis, 15h30 - 17h00",
         "max_participants": 12,
-        "participants": ["henry@mergington.edu", "evelyn@mergington.edu"]
+        "participants": ["henry@lesiris.edu", "evelyn@lesiris.edu"]
     }
 }
 
@@ -91,17 +91,14 @@ def get_activities():
 @app.post("/activities/{activity_name}/signup")
 def signup_for_activity(activity_name: str, email: str):
     """Sign up a student for an activity"""
-    # Validate activity exists
     if activity_name not in activities:
         raise HTTPException(status_code=404, detail="Activity not found")
 
-    # Get the specificy activity
     activity = activities[activity_name]
 
-    # Validate student is not already signed up
     if email in activity["participants"]:
-        raise HTTPException(status_code=400, detail="Student already signed up")
+        raise HTTPException(status_code=400, detail="Student is already signed up")
 
-    # Add student
     activity["participants"].append(email)
-    return {"message": f"Signed up {email} for {activity_name}"}
+    return {"message": f"Signed up {email} for {activity_name}", "participants": activity["participants"]}
+
